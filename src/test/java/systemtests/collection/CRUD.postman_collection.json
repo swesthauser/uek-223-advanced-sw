@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "cd29e5a3-f1ed-4cd9-abdd-e46c9e48c35d",
+		"name": "CRUD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd41e209-cabc-4869-8f65-126bd8020511",
+						"exec": [
+							"pm.test(\"Response time is less than 1000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function() {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Is returned User equal as created User\", function() {",
+							"    var jsonObj = pm.response.json();",
+							"    pm.expect(jsonObj.firstName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).firstName);",
+							"    pm.expect(jsonObj.lastName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).lastName);",
+							"    pm.expect(jsonObj.email).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).email);",
+							"    pm.environment.set(\"userToBeTestedAgainst\", JSON.stringify(jsonObj));",
+							"    pm.environment.set(\"userToBeTestedAgainstId\", jsonObj.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{userToBeTestedAgainst}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uek223advancedstatingsabrina.herokuapp.com/users",
+					"protocol": "https",
+					"host": [
+						"uek223advancedstatingsabrina",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUsers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9235a6b2-ffde-4a60-a25c-1dca3ccd0480",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://uek223advancedstatingsabrina.herokuapp.com/users",
+					"protocol": "https",
+					"host": [
+						"uek223advancedstatingsabrina",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fc547190-ae07-4c8b-a9dc-558e7c461573",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 400ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(400);",
+							"});",
+							"",
+							"pm.test(\"Check if user exists\", function () {",
+							"    var jsonObj = pm.response.json();",
+							"    pm.expect(jsonObj.firstName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).firstName);",
+							"    pm.expect(jsonObj.lastName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).lastName);",
+							"    pm.expect(jsonObj.email).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).email);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://uek223advancedstatingsabrina.herokuapp.com/users/{{userToBeTestedAgainstId}}",
+					"protocol": "https",
+					"host": [
+						"uek223advancedstatingsabrina",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{userToBeTestedAgainstId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c8bc7a04-9b3c-4c41-82b7-c8aaf3eacc00",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Is returned User not equal as created User\", function() {",
+							"    var jsonObj = pm.response.json();",
+							"    pm.expect(jsonObj.firstName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).firstName);",
+							"    pm.expect(jsonObj.lastName).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).lastName);",
+							"    pm.expect(jsonObj.email).to.eql(JSON.parse(pm.environment.get(\"userToBeTestedAgainst\")).email);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{userToBeTestedAgainst}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uek223advancedstatingsabrina.herokuapp.com/users/{{userToBeTestedAgainstId}}",
+					"protocol": "https",
+					"host": [
+						"uek223advancedstatingsabrina",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{userToBeTestedAgainstId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e66c5ad0-4824-43d6-9ed5-47773e96c722",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function() {",
+							"    pm.response.to.be.not.withBody;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://uek223advancedstatingsabrina.herokuapp.com/users/{{userToBeTestedAgainstId}}",
+					"protocol": "https",
+					"host": [
+						"uek223advancedstatingsabrina",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{userToBeTestedAgainstId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
