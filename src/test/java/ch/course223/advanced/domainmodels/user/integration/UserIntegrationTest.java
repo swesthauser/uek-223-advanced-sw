@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
@@ -76,6 +77,29 @@ public class UserIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray())));
     }
+
+    @Test
+    public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
+        UUID uuidToBeTestedAgainst = UUID.randomUUID();
+        User userToBeTestedAgainst1 = new User().setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuidToBeTestedAgainst.randomUUID().toString()));
+        User userToBeTestedAgainst2 = new User().setFirstName("Lucas").setLastName("Doe").setEmail("lucas.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuidToBeTestedAgainst.randomUUID().toString()));
+        userRepository.save(userToBeTestedAgainst1);
+        userRepository.save(userToBeTestedAgainst2);
+
+        UserDTO userDTOToBeTestedAgainst1 = new UserDTO(userToBeTestedAgainst1.getId()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch");
+        UserDTO userDTOToBeTestedAgainst2 = new UserDTO(userToBeTestedAgainst2.getId()).setFirstName("Lucas").setLastName("Doe").setEmail("lucas.doe@noseryoung.ch");
+        List<UserDTO> listOfUserDTOSToBeTestedAgainst  = Arrays.asList(userDTOToBeTestedAgainst1, userDTOToBeTestedAgainst2);
+        mvc.perform(
+                MockMvcRequestBuilders.get("/users")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst1.getFirstName(),userDTOToBeTestedAgainst2.getFirstName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst1.getLastName(),userDTOToBeTestedAgainst2.getLastName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst1.getEmail(),userDTOToBeTestedAgainst2.getEmail())));
+
+    }
+
 }
 
 
